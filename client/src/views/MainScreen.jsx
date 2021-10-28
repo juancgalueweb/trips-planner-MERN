@@ -104,8 +104,9 @@ export const MainScreen = () => {
                   trips.map((trip) => (
                     <tr key={trip._id}>
                       <td>{trip.location}</td>
-                      {/* <td>{trip.date.toLocaleDateString("es")}</td> */}
-                      <td>{moment(trip.date).format("LLL")}</td>
+                      <td>
+                        {moment(trip.date).add(1, "days").format("DD-MM-YYYY")}
+                      </td>
                       <td>
                         {trip.people.length > 1
                           ? trip.people.join(", ")

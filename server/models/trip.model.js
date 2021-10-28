@@ -23,6 +23,7 @@ const TripsSchema = new Schema(
     },
     status: {
       type: String,
+      required: [true, "The trip needs a initial status"],
       default: "Pendiente",
     },
   },

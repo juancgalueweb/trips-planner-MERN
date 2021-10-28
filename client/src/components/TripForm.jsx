@@ -11,8 +11,16 @@ export const TripForm = ({ processSubmit, initialValues, titleButton }) => {
       .required("La ubicación es requerida"),
     date: Yup.date().required("El viaje necesita una fecha de inicio"),
     people: Yup.string(),
-    status: Yup.string(),
+    status: Yup.string().required("El viaje debe tener un estado"),
   });
+
+  const disablePastDate = () => {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+    return yyyy + "-" + mm + "-" + dd;
+  };
 
   return (
     <Formik
@@ -42,6 +50,7 @@ export const TripForm = ({ processSubmit, initialValues, titleButton }) => {
             <Form.Control
               type="date"
               name="date"
+              min={disablePastDate()}
               value={values.date}
               onChange={handleChange}
               isValid={touched.date && !errors.date}
@@ -52,17 +61,17 @@ export const TripForm = ({ processSubmit, initialValues, titleButton }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="people">
-            <Form.Label>Personas</Form.Label>
+            <Form.Label>Grupo de viaje</Form.Label>
             <Form.Control
               type="text"
               name="people"
-              value={values.people} //.split(",")
+              value={values.people}
               onChange={handleChange}
               isValid={touched.people && !errors.people}
               isInvalid={!!errors.people}
             />
             <Form.Text className="text-muted">
-              Separar las personas por coma {","}
+              Separar las personas con comas {`", "`}
             </Form.Text>
             <Form.Control.Feedback type="invalid">
               {errors.people}
@@ -70,14 +79,18 @@ export const TripForm = ({ processSubmit, initialValues, titleButton }) => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="status">
             <Form.Label>Estado del viaje</Form.Label>
-            <Form.Control
-              type="text"
+            <Form.Select
               name="status"
               value={values.status}
               onChange={handleChange}
               isValid={touched.status && !errors.status}
               isInvalid={!!errors.status}
-            />
+            >
+              <option value={""}>Seleccione un estado</option>
+              <option value={"Pendiente"}>Pendiente</option>
+              <option value={"En curso"}>En curso</option>
+              <option value={"Completado"}>Completado</option>
+            </Form.Select>
             <Form.Control.Feedback type="invalid">
               {errors.status}
             </Form.Control.Feedback>

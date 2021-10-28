@@ -31,7 +31,7 @@ export const TripContainer = () => {
       setInitialData({
         ...trip.data,
         people: trip.data.people.join(", "),
-        date: moment(trip.data.date).format("YYYY-MM-DD"),
+        date: moment(trip.data.date).add(1, "days").format("YYYY-MM-DD"),
       });
       setLoaded(true);
     } catch (err) {
@@ -49,9 +49,13 @@ export const TripContainer = () => {
       Swal.fire({
         icon: "success",
         title: "Viaje creado con éxito",
-        showConfirmButton: true,
+        showConfirmButton: false,
+        timer: 2000,
       });
       resetForm();
+      setTimeout(() => {
+        history.push("/");
+      }, 2100);
     } catch (err) {
       console.log(err.response.data.message);
       Swal.fire({
@@ -78,7 +82,7 @@ export const TripContainer = () => {
       });
       setTimeout(() => {
         history.push("/");
-      }, 2001);
+      }, 2100);
     } catch (err) {
       console.log(err);
     }
