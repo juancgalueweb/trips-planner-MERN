@@ -94,7 +94,6 @@ export const TripContainer = () => {
       if (id) {
         await getTripById();
       } else {
-        setInitialData(startingData);
         setLoaded(true);
       }
     };

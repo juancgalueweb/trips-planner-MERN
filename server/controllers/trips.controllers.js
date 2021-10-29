@@ -10,16 +10,6 @@ const createTrip = async (req, res) => {
   }
 };
 
-//Method to find all trips
-const getAllTrips = async (req, res) => {
-  try {
-    const allTrips = await TripModel.find({});
-    return res.json(allTrips);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
 //Method to find a trip by user ID
 const getTripByUser = async (req, res) => {
   try {
@@ -66,7 +56,7 @@ const updateTripById = async (req, res) => {
 
 module.exports = {
   createTrip,
-  getAllTrips,
+  // getAllTrips,
   getTripByUser,
   getTripById,
   deleteTripById,

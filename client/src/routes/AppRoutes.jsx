@@ -21,7 +21,7 @@ export const AppRoutes = () => {
           <Route exact path="/trip/:id">
             <TripContainer />
           </Route>
-          <Route exact path="/trip">
+          <Route exact path="/new">
             <TripContainer />
           </Route>
         </Switch>

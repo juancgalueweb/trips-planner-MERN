@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -19,34 +19,20 @@ export const Register = ({ setIsLogin }) => {
       .oneOf([Yup.ref("password"), null], "Las contraseñas deben coincidir"),
   });
 
-  const [userRegister, setUserRegister] = useState({
-    userData: [],
-    loaded: false,
-  });
-
   const history = useHistory();
 
   const createUser = async (values) => {
-    const valuesToCreateUser = {
-      fullName: values.fullName,
-      email: values.email,
-      password: values.password,
-    };
     try {
-      console.log("values", valuesToCreateUser);
       const response = await axios.post(
         "http://localhost:8001/api/auth/register",
-        valuesToCreateUser
+        values
       );
       console.log(response);
-      setUserRegister({
-        ...userRegister,
-        userData: [...userRegister.userData, response.data],
-      });
       Swal.fire({
         icon: "success",
         title: `"${values.fullName}" se registró exitosamente. Por favor, inicia sesión`,
         showConfirmButton: true,
+        confirmButtonText: "Yeahhhh!",
       }).then((result) => {
         if (result.isConfirmed) {
           setIsLogin(true);

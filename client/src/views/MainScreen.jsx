@@ -42,7 +42,8 @@ export const MainScreen = () => {
     try {
       await Swal.fire({
         title: `¿Seguro que quiere borrar el viaje a <strong>${tripLocation}</strong>?`,
-        showCancelButton: true,
+        showDenyButton: true,
+        denyButtonText: "Me arrepentí",
         confirmButtonText: "Borrar",
       }).then((result) => {
         if (result.isConfirmed) {
@@ -134,7 +135,7 @@ export const MainScreen = () => {
               </tbody>
             </Table>
             <Button variant="primary" className="my-2 float-end">
-              <Link to={"/trip"} className="text-decoration-none text-light">
+              <Link to={"/new"} className="text-decoration-none text-light">
                 Crear nuevo viaje
               </Link>
             </Button>
