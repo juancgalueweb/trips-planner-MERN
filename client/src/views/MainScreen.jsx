@@ -12,6 +12,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Form from "react-bootstrap/Form";
 
 export const MainScreen = () => {
   const [trips, setTrips] = useState([]);
@@ -54,6 +55,20 @@ export const MainScreen = () => {
           Swal.fire("No se borrará", "", "info");
         }
       });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //Edit trip status in table
+  const editTripStatus = async (values, tripStatus) => {
+    try {
+      const updatedTrip = { ...values, status: tripStatus };
+      await axios.put(
+        `http://localhost:8001/api/trip/${values._id}`,
+        updatedTrip
+      );
+      getTripByUser();
     } catch (err) {
       console.log(err);
     }
@@ -111,7 +126,17 @@ export const MainScreen = () => {
                           ? trip.people.join(", ")
                           : trip.people}
                       </td>
-                      <td>{trip.status}</td>
+                      <td>
+                        <Form.Select
+                          name="status"
+                          value={trip.status}
+                          onChange={(e) => editTripStatus(trip, e.target.value)}
+                        >
+                          <option value={"Pendiente"}>Pendiente</option>
+                          <option value={"En curso"}>En curso</option>
+                          <option value={"Completado"}>Completado</option>
+                        </Form.Select>
+                      </td>
                       <td className="text-center">
                         <Link to={`/trip/${trip._id}`}>
                           <FontAwesomeIcon
