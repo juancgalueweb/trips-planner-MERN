@@ -31,7 +31,7 @@ export const TripContainer = () => {
       setInitialData({
         ...trip.data,
         people: trip.data.people.join(", "),
-        date: moment(trip.data.date).add(1, "days").format("YYYY-MM-DD"),
+        date: moment.utc(trip.data.date).format("YYYY-MM-DD"),
       });
       setLoaded(true);
     } catch (err) {
@@ -89,21 +89,15 @@ export const TripContainer = () => {
   };
 
   useEffect(() => {
-    getTripById();
-  }, []); //eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoaded(false);
-      console.log(id);
-      if (id !== undefined) {
-        const res = await axios.get(`http://localhost:8001/api/trip/${id}`);
-        setInitialData({ ...res.data });
+    const fetchData = async () => {
+      console.log("Id adentro del useEffect", id);
+      if (id) {
+        await getTripById();
       } else {
-        await setInitialData(startingData);
+        setInitialData(startingData);
+        setLoaded(true);
       }
-      setLoaded(true);
-    }
+    };
     fetchData();
   }, [id]); //eslint-disable-line react-hooks/exhaustive-deps
 

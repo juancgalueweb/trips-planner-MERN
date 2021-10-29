@@ -104,9 +104,7 @@ export const MainScreen = () => {
                   trips.map((trip) => (
                     <tr key={trip._id}>
                       <td>{trip.location}</td>
-                      <td>
-                        {moment(trip.date).add(1, "days").format("DD-MM-YYYY")}
-                      </td>
+                      <td>{moment.utc(trip.date).format("DD-MM-YYYY")}</td>
                       <td>
                         {trip.people.length > 1
                           ? trip.people.join(", ")
