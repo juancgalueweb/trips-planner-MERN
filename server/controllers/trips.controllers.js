@@ -56,7 +56,6 @@ const updateTripById = async (req, res) => {
 
 module.exports = {
   createTrip,
-  // getAllTrips,
   getTripByUser,
   getTripById,
   deleteTripById,
