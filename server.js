@@ -1,13 +1,20 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 const port = 8001;
 
-//Using cors
-app.use(cors());
+//Using dotenv
+require("dotenv").config();
 
 //Mongoose config
 require("./server/config/mongoose.config");
+
+//Cookie-parser
+app.use(cookieParser());
+
+//Using cors
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 //Access POST method
 app.use(express.json());

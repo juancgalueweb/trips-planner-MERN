@@ -34,9 +34,14 @@ export const MainScreen = () => {
     }
   };
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     setUser(null);
     localStorage.clear();
+    try {
+      await axios.post("http://localhost:8001/api/auth/logout");
+    } catch (err) {
+      console.log({ msg: "Logout error" }, err);
+    }
   };
 
   const deleteTrip = async (tripId, tripLocation) => {

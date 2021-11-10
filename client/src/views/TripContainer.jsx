@@ -100,9 +100,16 @@ export const TripContainer = () => {
     fetchData();
   }, [id]); //eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     setUser(null);
     localStorage.clear();
+    try {
+      console.log("Logout done!");
+      history.push("/login");
+      await axios.post("http://localhost:8001/api/auth/logout");
+    } catch (err) {
+      console.log({ msg: "Logout error" }, err);
+    }
   };
 
   return (

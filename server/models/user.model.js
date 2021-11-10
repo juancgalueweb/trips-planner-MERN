@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
-const { Schema, model } = mongoose;
+const bcrypt = require("bcrypt");
+const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema(
   {
@@ -13,6 +13,10 @@ const UserSchema = new Schema(
       type: String,
       required: [true, "The user requires an email"],
       unique: [true, "Email already exists in the database"],
+      validate: {
+        validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
+        message: "Please enter a valid email",
+      },
     },
     password: {
       type: String,
@@ -22,6 +26,19 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  bcrypt.hash(this.password, 10, (err, passwordHash) => {
+    if (err) {
+      return next(err);
+    }
+    this.password = passwordHash;
+    next();
+  });
+});
 
 //Apply the uniqueValidator plugin to UserSchema
 UserSchema.plugin(uniqueValidator, { message: "{PATH} debe ser único" });

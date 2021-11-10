@@ -98,7 +98,7 @@ export const LoginRegisterScreen = () => {
 
   return (
     <div>
-      <Container className="m-2">
+      <Container className="mx-auto my-2">
         <Row className="d-flex justify-content-center align-items-center">
           <Col className="col-5 bg-light shadow rounded">
             {isLogin ? (

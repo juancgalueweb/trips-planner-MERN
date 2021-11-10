@@ -1,7 +1,9 @@
 const UserModel = require("../models/user.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 //Method to create an user
-module.exports.createUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
   try {
     const newUSer = await UserModel.create(req.body);
     return res.json(newUSer);
@@ -13,15 +15,47 @@ module.exports.createUser = async (req, res) => {
 
 //Method to login user
 module.exports.loginUser = async (req, res) => {
-  UserModel.findOne({ email: req.body.email })
-    .then((user) => {
-      // console.log("PASSWORD DE LA BASE DE DATOS: ", user.password);
-      // console.log("PASSWORD DESDE EL FRONTEND:", req.body.password);
-      if (user.password === req.body.password) {
-        return res.json({ fullName: user.fullName, _id: user._id });
+  try {
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (!user) {
+      res.status(403).json({ msg: "Credenciales inválidas" });
+    } else {
+      const isValidPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (isValidPassword) {
+        const newJWT = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
+        return res
+          .cookie("usertoken", newJWT, process.env.SECRET_KEY, {
+            httpOnly: true,
+          })
+          .json({ fullName: user.fullName, _id: user._id });
       } else {
-        return res.status(401).json({ message: "Contraseña incorrecta" });
+        res.status(403).json({ msg: "Credenciales inválidas" });
       }
-    })
-    .catch((err) => res.status(400).json(err));
+    }
+  } catch (err) {
+    res.status(403).json({ msg: "Credenciales inválidas", err });
+  }
+};
+
+module.exports.greeting = async (_, res) => {
+  try {
+    res.json({ msg: "Están validados :-)" });
+  } catch (err) {
+    return res.status(403).json(err);
+  }
+};
+
+module.exports.logout = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (user) {
+      res.clearCookie("usertoken");
+      return res.json(user);
+    }
+  } catch (err) {
+    return res.status(500).json({ msg: "Ha fallado", err });
+  }
 };
